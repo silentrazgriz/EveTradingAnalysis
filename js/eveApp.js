@@ -20,7 +20,7 @@ class EveApp {
 					regions: eveRegions,
 					categories: eveCategories
 				},
-				orderData: []
+				orderData: [],
 			},
 			methods: {
 				findOrders: function(e) {
@@ -29,28 +29,6 @@ class EveApp {
 					api.requestMarketOrders(this.config, this.orderData, 0);
 				}
 			}
-		});
-
-		this.table = $(tableSelector).DataTable({
-			scrollY: '400px',
-			scrollCollapse: true,
-			paging: false,
-			columns: [
-				{ title: 'Item name' },
-				{ title: 'Volume' },
-				{ title: 'Sell Price' },
-				{ title: 'Sell Volume' },
-				{ title: 'Sell Station' },
-				{ title: 'Buy Price' },
-				{ title: 'Buy Volume' },
-				{ title: 'Buy Station' },
-				{ title: 'Cost' },
-				{ title: 'Profit %' },
-				{ title: 'Profit' },
-				{ title: 'Profit / Jump' },
-				{ title: 'Profit / m3' },
-				{ title: 'Route' }
-			]
 		});
 	}
 }

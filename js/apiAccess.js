@@ -25,7 +25,6 @@ class ApiAccess {
 				let maxBuyPrice = parseFloat(data.buy_orders.order[0].price);
 				let minSellPrice = parseFloat(data.sell_orders.order[0].price);
 
-				console.log('buy');
 				// get all buy orders with price higher than min sell price
 				for (let order of data.buy_orders.order) {
 					// filter order from low sec allowed or not
@@ -41,7 +40,6 @@ class ApiAccess {
 					}
 				}
 
-				console.log('sell');
 				// get all sell orders with price lower than max buy price
 				for (let order of data.sell_orders.order) {
 					// filter order from low sec allowed or not
@@ -56,35 +54,38 @@ class ApiAccess {
 						});
 					}
 				}
-				console.log('match');
+
 				// match sell orders with buy orders
 				for (let sellOrder of sellOrders) {
 					for (let buyOrder of buyOrders) {
 						if (buyOrder.price - sellOrder.price > 0) {
 							let minQuantity = Math.min(buyOrder.quantity, sellOrder.quantity);
 							let newOrder = {
+								name: type.typeName,
 								quantity: minQuantity,
-								sellOrder: sellOrder,
-								buyOrder: buyOrder,
-								item: type,
-								profit: parseFloat(((buyOrder.price - sellOrder.price) * minQuantity).toFixed(2)),
-								cost: parseFloat((sellOrder.price * minQuantity).toFixed(2)),
-								route: this.getJump(sellOrder.systemName, buyOrder.systemName),
 								volume: 0,
+								sellPrice: sellOrder.price,
+								sellQuantity: sellOrder.quantity,
+								sellStation: sellOrder.stationName,
+								buyPrice: buyOrder.price,
+								buyQuantity: buyOrder.quantity,
+								buyStation: buyOrder.stationName,
+								cost: parseFloat((sellOrder.price * minQuantity).toFixed(2)),
+								profit: parseFloat(((buyOrder.price - sellOrder.price) * minQuantity).toFixed(2)),
 								profitPercent: 0,
 								profitPerM3: 0,
-								profitPerJump: 0
+								profitPerJump: 0,
+								route: this.getJump(sellOrder.systemName, buyOrder.systemName)
 							};
-							this.calculateDetailOrder(newOrder);
-							orders.push(newOrder);
+							this.calculateDetailOrder(newOrder, type);
+							orderData.push(newOrder);
 						}
 					}
 				}
-				console.log(data);
-				console.log(orders);
 			}, (response) => {
 				// error
-				console.log('error');
+				console.log('requestMarketOrders failed');
+				console.log(response);
 			});
 			//setTimeout(this.requestMarketOrders(config, regionIndex, categoryIndex + 1).bind(this), 250);
 		//}
@@ -96,8 +97,8 @@ class ApiAccess {
 		apiOrder.vol_remain = parseFloat(apiOrder.vol_remain);
 	}
 
-	calculateDetailOrder(order) {
-		order.volume = parseFloat((order.item.volume * order.quantity).toFixed(2));
+	calculateDetailOrder(order, item) {
+		order.volume = parseFloat((item.volume * order.quantity).toFixed(2));
 		order.profitPercent = parseFloat((order.profit / order.cost).toFixed(2));
 		order.profitPerM3 = parseFloat((order.profit / order.volume).toFixed(2));
 		order.profitPerJump = parseFloat((order.profit / Math.max(1, order.route)).toFixed(2));
@@ -105,14 +106,19 @@ class ApiAccess {
 
 	getJump(from, to) {
 		let jump = 0;
+		console.log('getJump: ' + from + ' to ' + to);
 		if (from != to) {
+			console.log('check ' + from + ' to ' + to);
 			this.$http.get(this.generateRouteJumpURL(from, to)).then((response) => {
 				jump = response.body.length;
+				console.log('result: ' + jump);
 			}, (response) => {
 				// error
-				console.log('error');
+				console.log('getJump failed');
+				console.log(response);
 			});
 		}
+		console.log('beforeReturn: ' + jump);
 		return jump;
 	}
 
