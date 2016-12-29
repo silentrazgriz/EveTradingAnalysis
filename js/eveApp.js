@@ -26,12 +26,17 @@ class EveApp {
 				orderData: []
 			},
 			methods: {
-				findOrders: function(e) {
+				findOrders(e) {
 					e.preventDefault();
 					this.orderData = [];
 					this.progress = 0;
 					let api = new ApiAccess(this.$http, this.orderData);
 					api.requestMarketOrders(this.config, 0);
+				}
+			},
+			watch: {
+				'config.groups'(val) {
+					console.log('groups changed ' + val);
 				}
 			}
 		});

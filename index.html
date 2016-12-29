@@ -153,6 +153,9 @@
 	let eveApp = new EveApp('#app', '#view-table');
 	$('#region-select').SumoSelect({ search: true, placeholder: 'Choose regions' });
 	$('#group-select').SumoSelect({ search: true, placeholder: 'Choose groups' });
+	$(".SumoSelect li").bind('click.check', function(event) {
+		//alert($(this).hasClass('selected'));
+	});
 </script>
 </body>
 </html>
