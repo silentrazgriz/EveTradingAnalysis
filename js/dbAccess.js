@@ -20,10 +20,10 @@ class DbAccess {
 	}
 
 	static getTypeIDsFromCategory(categoryID) {
-		let groupIDs = DbAccess.getGroupsFromCategory(categoryID);
+		let groupIDs = DbAccess.getGroupIDsFromCategory(categoryID);
 		let typeIDs = [];
 		for (let groupID of groupIDs) {
-			typeIDs.concat(DbAccess.getTypesFromGroup(groupID));
+			typeIDs = typeIDs.concat(DbAccess.getTypeIDsFromGroup(groupID));
 		}
 		return typeIDs;
 	}

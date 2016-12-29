@@ -14,10 +14,12 @@ class EveApp {
 					minVolume: 0,
 					avoidLowSec: true,
 					regions: [],
-					categories: []
+					groups: []
 				},
 				eveData: {
+					factions: eveFactions,
 					regions: eveRegions,
+					groups: eveGroups,
 					categories: eveCategories
 				},
 				orderData: [],
@@ -25,8 +27,9 @@ class EveApp {
 			methods: {
 				findOrders: function(e) {
 					e.preventDefault();
-					let api = new ApiAccess(this.$http);
-					api.requestMarketOrders(this.config, this.orderData, 0);
+					this.orderData = [];
+					let api = new ApiAccess(this.$http, this.orderData);
+					api.requestMarketOrders(this.config, 0);
 				}
 			}
 		});

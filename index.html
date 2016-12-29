@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" href="css/plugins/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/plugins/datatables.min.css"/>
+	<link rel="stylesheet" href="css/plugins/sumoselect.min.css"/>
 	<link rel="stylesheet" href="css/app.css"/>
 
 	<script src="js/plugins/x2js.js"></script>
@@ -14,7 +15,9 @@
 	<script src="js/plugins/vue.min.js"></script>
 	<script src="js/plugins/vue-resource.min.js"></script>
 	<script src="js/plugins/datatables.min.js"></script>
+	<script src="js/plugins/sumoselect.min.js"></script>
 
+	<script src="db/factions.js"></script>
 	<script src="db/regions.js"></script>
 	<script src="db/stations.js"></script>
 	<script src="db/categories.js"></script>
@@ -52,28 +55,24 @@
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Max Volume</label>
-					<div class="col-xs-6 input-group">
-						<input type="text" class="form-control input-sm" v-model="config.maxVolume"/>
-						<span class="input-group-addon">m3</span>
-					</div>
-				</div>
-				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Min Volume</label>
-					<div class="col-xs-6 input-group">
-						<input type="text" class="form-control input-sm" v-model="config.minVolume"/>
-						<span class="input-group-addon">m3</span>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="form-group col-xs-3">
 					<label class="col-xs-6 control-label">Max Jump</label>
 					<div class="col-xs-6 input-group">
 						<input type="text" class="form-control input-sm" v-model="config.maxJump"/>
 						<span class="input-group-addon">jumps</span>
 					</div>
 				</div>
+				<div class="form-group col-xs-3">
+					<label class="col-xs-4 control-label">Regions</label>
+					<div class="col-xs-8 input-group">
+						<select id="region-select" v-model="config.regions" multiple>
+							<optgroup v-for="faction in eveData.factions" v-bind:label="faction.factionName">
+								<option v-for="region in eveData.regions" v-if="region.factionID == faction.factionID" v-bind:value="region.regionID">{{ region.regionName }}</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="form-group col-xs-3">
 					<label class="col-xs-6 control-label">Min Profit</label>
 					<div class="col-xs-6 input-group">
@@ -95,36 +94,44 @@
 						<span class="input-group-addon">ISK</span>
 					</div>
 				</div>
+				<div class="form-group col-xs-3">
+					<label class="col-xs-4 control-label">Groups</label>
+					<div class="col-xs-8 input-group">
+						<select id="group-select" v-model="config.groups" multiple>
+							<optgroup v-for="category in eveData.categories" v-bind:label="category.categoryName">
+								<option v-for="group in eveData.groups" v-if="group.categoryID == category.categoryID" v-bind:value="group.groupID">{{ group.groupName }}</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Regions</label>
+					<label class="col-xs-6 control-label">Max Volume</label>
 					<div class="col-xs-6 input-group">
-						<select v-model="config.regions" class="form-control" multiple>
-							<option v-for="region in eveData.regions" v-bind:value="region.regionID">{{ region.regionName }}</option>
-						</select>
+						<input type="text" class="form-control input-sm" v-model="config.maxVolume"/>
+						<span class="input-group-addon">m3</span>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Categories</label>
+					<label class="col-xs-6 control-label">Min Volume</label>
 					<div class="col-xs-6 input-group">
-						<select v-model="config.categories" class="form-control" multiple>
-							<option v-for="category in eveData.categories" v-bind:value="category.categoryID">{{ category.categoryName }}</option>
-						</select>
+						<input type="text" class="form-control input-sm" v-model="config.minVolume"/>
+						<span class="input-group-addon">m3</span>
 					</div>
 				</div>
+				<div class="form-group col-xs-3"></div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label"></label>
-					<div class="col-xs-6 input-group">
+					<div class="col-xs-7">
 						<label class="control control--checkbox">
 							Avoid low sec
 							<input type="checkbox" v-model="config.avoidLowSec"/>
 							<div class="control__indicator"></div>
 						</label>
 					</div>
-				</div>
-				<div class="form-group col-xs-3 text-right">
-					<button class="btn btn-sm btn-primary" v-on:click="findOrders">Refresh Data</button>
+					<div class="col-xs-5 text-right">
+						<button class="btn btn-sm btn-primary" v-on:click="findOrders">Refresh Data</button>
+					</div>
 				</div>
 			</div>
 		</form>
@@ -135,6 +142,8 @@
 </main>
 <script type="application/javascript">
 	let eveApp = new EveApp('#app', '#view-table');
+	$('#region-select').SumoSelect({ search: true, placeholder: 'Choose regions' });
+	$('#group-select').SumoSelect({ search: true, placeholder: 'Choose groups' });
 </script>
 </body>
 </html>

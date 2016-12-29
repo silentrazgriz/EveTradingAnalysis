@@ -25,14 +25,14 @@ Vue.component('data-table', {
 		};
 	},
 	watch: {
-		orders(val, oldVal) {
-			this.table.clear();
-			this.table.rows.add(val);
-			this.table.draw();
+		orders: {
+			handler(val, oldVal) {
+				this.table.clear();
+				this.table.rows.add(val);
+				this.table.draw();
+			},
+			deep: true
 		}
-	},
-	methods: {
-
 	},
 	mounted() {
 		this.table = $(this.$el).DataTable({

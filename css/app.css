@@ -1,6 +1,5 @@
 * {
 	font-size: 12px;
-	border-radius: 0 !important;
 }
 
 h3 {
@@ -15,7 +14,7 @@ select.form-control {
 .control {
 	position: relative;
 	display: block;
-	padding-left: 30px;
+	padding-left: 25px;
 	cursor: pointer;
 	margin-top: 8px;
 }
