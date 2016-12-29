@@ -1,0 +1,1 @@
+const eveFactions = [{"factionID": 500001,"factionName": "Caldari State"}, {"factionID": 500002,"factionName": "Minmatar Republic"}, {"factionID": 500003,"factionName": "Amarr Empire"}, {"factionID": 500004,"factionName": "Gallente Federation"}, {"factionID": 500007,"factionName": "Ammatar Mandate"},];
