@@ -11,6 +11,10 @@ select.form-control {
 	font-size: 12px;
 }
 
+.progress {
+	margin: 5px 0 5px 10px;
+}
+
 .control {
 	position: relative;
 	display: block;
