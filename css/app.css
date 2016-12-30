@@ -12,7 +12,19 @@ select.form-control {
 }
 
 .progress {
+	position: relative;
 	margin: 5px 0 5px 20px;
+}
+
+.progress .progress-text {
+	position: absolute;
+	width: 100%;
+	line-height: 20px;
+	font-weight: bold;
+}
+
+.progress-bar {
+	transition: none;
 }
 
 .control {

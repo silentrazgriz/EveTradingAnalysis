@@ -28,6 +28,15 @@ class DbAccess {
 		return typeIDs;
 	}
 
+	static getStationData(stationID) {
+		let index = BinarySearch.find(eveStations, stationID, 'stationID');
+		if (index == -1) {
+			return null;
+		} else {
+			return eveStations[index];
+		}
+	}
+
 	static getGroupData(groupID) {
 		for (let group of eveGroups) {
 			if (group.groupID == groupID) {

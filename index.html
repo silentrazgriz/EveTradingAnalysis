@@ -33,7 +33,7 @@
 <body>
 <main id="app">
 	<section id="option" class="container">
-		<form class="form-horizontal">
+		<form id="option-form" class="form-horizontal">
 			<div class="row">
 				<div class="col-xs-12">
 					<h3 class="text-center">EVE Online Trading Analysis</h3>
@@ -64,7 +64,7 @@
 				<div class="form-group col-xs-3">
 					<label class="col-xs-4 control-label">Regions</label>
 					<div class="col-xs-8 input-group">
-						<select id="region-select" v-model="config.regions" multiple>
+						<select id="region-select" data-target="regions" v-model="config.regions" multiple>
 							<optgroup v-for="faction in eveData.factions" v-bind:label="faction.factionName">
 								<option v-for="region in eveData.regions" v-if="region.factionID == faction.factionID" v-bind:value="region.regionID">{{ region.regionName }}</option>
 							</optgroup>
@@ -74,33 +74,31 @@
 			</div>
 			<div class="row">
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Min Profit</label>
+					<label class="col-xs-6 control-label">Min Gain</label>
 					<div class="col-xs-6 input-group">
 						<input type="text" class="form-control input-sm" v-model="config.minProfit"/>
 						<span class="input-group-addon">ISK</span>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Min Profit %</label>
+					<label class="col-xs-6 control-label">Min Gain %</label>
 					<div class="col-xs-6 input-group">
 						<input type="text" class="form-control input-sm" v-model="config.minProfitPercent"/>
 						<span class="input-group-addon">%</span>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Min Profit / Jump</label>
+					<label class="col-xs-6 control-label">Min Gain / Jump</label>
 					<div class="col-xs-6 input-group">
 						<input type="text" class="form-control input-sm" v-model="config.minProfitPerJump"/>
 						<span class="input-group-addon">ISK</span>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-4 control-label">Groups</label>
+					<label class="col-xs-4 control-label">Categories</label>
 					<div class="col-xs-8 input-group">
-						<select id="group-select" v-model="config.groups" multiple>
-							<optgroup v-for="category in eveData.categories" v-bind:label="category.categoryName">
-								<option v-for="group in eveData.groups" v-if="group.categoryID == category.categoryID" v-bind:value="group.groupID">{{ group.groupName }}</option>
-							</optgroup>
+						<select id="category-select" data-target="categories" v-model="config.categories" multiple>
+							<option v-for="category in eveData.categories" v-bind:value="category.categoryID">{{ category.categoryName }}</option>
 						</select>
 					</div>
 				</div>
@@ -114,18 +112,17 @@
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
-					<label class="col-xs-6 control-label">Min Volume</label>
+					<label class="col-xs-6 control-label">Min Qty</label>
 					<div class="col-xs-6 input-group">
-						<input type="text" class="form-control input-sm" v-model="config.minVolume"/>
-						<span class="input-group-addon">m3</span>
+						<input type="text" class="form-control input-sm" v-model="config.minQuantity"/>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
 					<div class="progress">
-						<div class="progress-bar progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+						<div class="progress-bar progress-bar progress-bar-info progress-bar-striped" role="progressbar"
 						     v-bind:aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100" v-bind:style="{ width: progress + '%' }">
-							{{ progress }}%
 						</div>
+						<div class="progress-text text-center">{{ requestDone }} / {{ requestStarted }}</div>
 					</div>
 				</div>
 				<div class="form-group col-xs-3">
@@ -151,11 +148,15 @@
 </main>
 <script type="application/javascript">
 	let eveApp = new EveApp('#app', '#view-table');
-	$('#region-select').SumoSelect({ search: true, placeholder: 'Choose regions' });
-	$('#group-select').SumoSelect({ search: true, placeholder: 'Choose groups' });
-	$(".SumoSelect li").bind('click.check', function(event) {
-		//alert($(this).hasClass('selected'));
+	$('select').SumoSelect({ search: true, csvDispCount: 2 })
+		.change(function() {
+		let target = $(this).attr('data-target');
+		if (target != undefined) {
+			eveApp.app.config[target] = $(this).val();
+		}
 	});
+	$('#region-select')[0].sumo.selectItem(0);
+	$('#category-select')[0].sumo.selectItem(0);
 </script>
 </body>
 </html>
